@@ -1,4 +1,3 @@
-//push test
 package main
 
 import (
@@ -17,6 +16,11 @@ func main() {
 
 	// Init learned world
 	world := model.CreateWorld(realWorld.Workers)
+	fmt.Printf("%v\n", len(world.Workers))
+
+	// Init Search agent
+	//    searchAgent := search.SearchAgent{search.HillClimbingAlgorithm{}}
+	searchAgent := search.CreateSearchAgent(search.HillClimbingAlgorithm{})
 
 	taskGenerator, hasNext := model.DummyTaskGenerator()
 	for hasNext {
@@ -27,7 +31,7 @@ func main() {
 		task, hasNext = taskGenerator()
 
 		// Find the optimal team
-		team := search.SearchTeam(world, task)
+		team := searchAgent.SearchTeam(world, task)
 
 		// Score the team
 		score := realWorld.ScoreTeam(team, task)

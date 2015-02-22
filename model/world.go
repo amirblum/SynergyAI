@@ -28,6 +28,6 @@ func CreateWorld(workers []Worker) *World {
 	return w
 }
 
-func (w *World) ScoreTeam(team []Worker, task Task) float32 {
+func (w *World) ScoreTeam(team []Worker, task Task) float64 {
 	return 2.
 }
