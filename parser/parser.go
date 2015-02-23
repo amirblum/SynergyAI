@@ -6,11 +6,14 @@ import (
 
 func LoadWorld(filename string) *model.World {
 	// Temp workers
-	worker := model.Worker{0, 1, make(map[model.Ability]float64, 2)}
-	worker.Components["Poop"] = 10.0
+	workers := make([]model.Worker, 2)
 
-	workers := make([]model.Worker, 0)
-	workers = append(workers, worker)
+	for i, _ := range workers {
+		worker := model.Worker{i, 1, make(map[model.Ability]float64, 1)}
+		worker.Components["Poop"] = float64((i + 1) * 5)
+
+		workers[i] = worker
+	}
 
 	return model.CreateWorld(workers)
 }

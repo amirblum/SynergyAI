@@ -1,17 +1,20 @@
 package search
 
 import (
+	"github.com/alexcesaro/log/stdlog"
 	"github.com/amirblum/SynergyAI/model"
 )
 
 type HillClimbingAlgorithm struct{}
 
 func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) []model.Worker {
+	logger := stdlog.GetFromFlags()
+
 	current := &teamNode{make([]model.Worker, 0), make(map[int]bool)}
 
 	for {
-
 		maxNeighbor := alg.getMaxNeighbor(current, world, task)
+		logger.Debugf("maxNeighbor: %v", maxNeighbor)
 
 		// Check break condition
 		if maxNeighbor != nil && world.CompareTeams(maxNeighbor.Workers, current.Workers, task) <= 0 {

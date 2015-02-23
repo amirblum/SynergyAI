@@ -8,7 +8,7 @@ type Task struct {
 }
 
 func DummyTaskGenerator() (func() (Task, bool), bool) {
-	tasks := make([]Task, 2)
+	tasks := make([]Task, 1)
 	for i, _ := range tasks {
 		tasks[i] = Task{10, make(map[Ability]float64, 2)}
 		tasks[i].Components["Poop"] = float64(5 * (i + 1))

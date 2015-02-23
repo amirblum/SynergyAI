@@ -40,9 +40,10 @@ func (node *teamNode) successorIterator(allWorkers []model.Worker) (func() (*tea
 		currentWorker++
 
 		// Find next worker that is not in the team
-		for currentWorker < len(allWorkers) && node.WorkerMap[prevWorker] == false {
+		for currentWorker < len(allWorkers) && node.WorkerMap[prevWorker] == true {
 			prevWorker = currentWorker
 			currentWorker++
+			break
 		}
 
 		// Copy the team
