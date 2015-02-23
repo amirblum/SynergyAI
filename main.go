@@ -21,6 +21,9 @@ func main() {
 	// Init Search agent
 	searchAgent := search.CreateSearchAgent(search.HillClimbingAlgorithm{})
 
+	// Init Learning agent
+	learningAgent := learning.CreateLearningAgent(learning.TemporalDifferenceAlgorithm{0.1})
+
 	taskGenerator, hasNext := model.DummyTaskGenerator()
 	for hasNext {
 		// Log current worldview
@@ -37,7 +40,7 @@ func main() {
 		fmt.Printf("The team %v received the score %v for task %v, with fulfillPercent %v\n", team, score, task, fulfill)
 
 		// Learn from experience
-		learning.LearnSynergy(world, realWorld, team, task)
+		learningAgent.LearnSynergy(world, realWorld, team, task)
 	}
 
 	fmt.Printf("%v\n", world.Synergy)

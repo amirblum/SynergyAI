@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/amirblum/SynergyAI/model"
 )
 
@@ -15,5 +16,10 @@ func LoadWorld(filename string) *model.World {
 		workers[i] = worker
 	}
 
-	return model.CreateWorld(workers)
+	realWorld := model.CreateWorld(workers)
+	realWorld.Synergy[0][1], realWorld.Synergy[1][0] = 0.1, 0.1
+
+	fmt.Printf("Real synergy: %v\n", realWorld.Synergy)
+
+	return realWorld
 }
