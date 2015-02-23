@@ -1,8 +1,8 @@
 package search
 
 import (
-	"fmt"
 	"github.com/amirblum/SynergyAI/model"
+	"github.com/amirblum/goutils"
 )
 
 type SearchAlgorithm interface {
@@ -14,37 +14,56 @@ type teamNode struct {
 	WorkerMap map[int]bool
 }
 
+// Copy a teamNode
 func (node *teamNode) copy() *teamNode {
 	newTeam := new(teamNode)
-	newTeam.Workers = node.Workers[:]
+
+	// Copy array
+	newTeam.Workers = make([]model.Worker, len(node.Workers))
+	copy(newTeam.Workers, node.Workers)
+
+	// Copy map
 	newTeam.WorkerMap = make(map[int]bool)
-	for k, v := range node.WorkerMap {
-		newTeam.WorkerMap[k] = v
-	}
+	goutils.CopyMap(node.WorkerMap, newTeam.WorkerMap)
+
 	return newTeam
 }
 
+// Iterator producing the successors of a given teamNode.
+// First add all the workers (that are not in the team) one by one
+// Then remove the workers in the team on by one
 func (node *teamNode) successorIterator(allWorkers []model.Worker) (func() (*teamNode, bool), bool) {
+	// Init iterator
 	currentWorker := 0
 	return func() (*teamNode, bool) {
 		prevWorker := currentWorker
 		currentWorker++
 
+		// Find next worker that is not in the team
 		for currentWorker < len(allWorkers) && node.WorkerMap[prevWorker] == false {
 			prevWorker = currentWorker
 			currentWorker++
 		}
 
-		if prevWorker == len(allWorkers) {
-			// TODO: Iterate removing workers
-			return nil, false
-		} else {
-			newTeam := node.copy()
+		// Copy the team
+		newTeam := node.copy()
+
+		// If there are more workers to add, add
+		if prevWorker < len(allWorkers) {
 			newTeam.Workers = append(newTeam.Workers, allWorkers[prevWorker])
 			newTeam.WorkerMap[prevWorker] = true
-			// TODO: hasNext true if len(node.Workers) > 0
-			fmt.Printf("currWorker: %v, len(allWorkers): %v\n", currentWorker, len(allWorkers))
-			return newTeam, (currentWorker < len(allWorkers))
+
+			return newTeam, (currentWorker < len(allWorkers)) || (len(node.Workers) > 0)
 		}
+
+		// Finished returning teams with added workers, start removing workers
+		idToRemove := prevWorker - len(allWorkers)
+
+		workerToRemove := newTeam.Workers[idToRemove]
+		newTeam.Workers = append(newTeam.Workers[:idToRemove], newTeam.Workers[idToRemove+1:]...)
+		newTeam.WorkerMap[workerToRemove.ID] = false
+
+		return newTeam, (idToRemove < len(node.Workers)-1)
+
 	}, (len(allWorkers) > 0)
 }

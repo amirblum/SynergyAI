@@ -6,8 +6,8 @@ import (
 
 func LoadWorld(filename string) *model.World {
 	// Temp workers
-	worker := model.Worker{1, 1, make(map[model.Ability]float32, 2)}
-	worker.Components["basic"] = 1.0
+	worker := model.Worker{0, 1, make(map[model.Ability]float64, 2)}
+	worker.Components["Poop"] = 10.0
 
 	workers := make([]model.Worker, 0)
 	workers = append(workers, worker)

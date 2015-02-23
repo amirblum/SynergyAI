@@ -1,46 +1,48 @@
 package search
 
 import (
-	"fmt"
 	"github.com/amirblum/SynergyAI/model"
 )
 
 type HillClimbingAlgorithm struct{}
 
-func (HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) []model.Worker {
-	var (
-		current  *teamNode
-		neighbor *teamNode
-	)
-
-	current = &teamNode{make([]model.Worker, 0), make(map[int]bool)}
-	currentScore := world.ScoreTeam(current.Workers, task)
+func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) []model.Worker {
+	current := &teamNode{make([]model.Worker, 0), make(map[int]bool)}
 
 	for {
-		// Find highest neighbor
-		neighborsIterator, hasNext := current.successorIterator(world.Workers)
-		fmt.Printf("%v\n", hasNext)
-		maxNeighborScore := -1.
 
-		// Loop on all neighbors
-		for hasNext {
-			fmt.Println("Hello")
-			var currentNeighbor *teamNode
-			currentNeighbor, hasNext = neighborsIterator()
-			fmt.Printf("%v\n", hasNext)
-
-			if neighborScore := world.ScoreTeam(currentNeighbor.Workers, task); neighborScore > maxNeighborScore {
-				maxNeighborScore = neighborScore
-				neighbor = currentNeighbor
-			}
-		}
+		maxNeighbor := alg.getMaxNeighbor(current, world, task)
 
 		// Check break condition
-		if maxNeighborScore <= currentScore {
+		if maxNeighbor != nil && world.CompareTeams(maxNeighbor.Workers, current.Workers, task) <= 0 {
 			return current.Workers
 		}
 
 		// Continue iteration
-		current = neighbor
+		current = maxNeighbor
 	}
+}
+
+// Find highest neighbor
+func (HillClimbingAlgorithm) getMaxNeighbor(current *teamNode, world *model.World, task model.Task) *teamNode {
+	var maxNeighbor *teamNode = nil
+
+	// Get neighbors iterator
+	neighborsIterator, hasNext := current.successorIterator(world.Workers)
+	if hasNext {
+		// Initiailize maxNeighbor to be the first successor (cuz no do-while)
+		maxNeighbor, hasNext = neighborsIterator()
+
+		// Find the max
+		for hasNext {
+			var currentNeighbor *teamNode
+			currentNeighbor, hasNext = neighborsIterator()
+
+			if world.CompareTeams(maxNeighbor.Workers, currentNeighbor.Workers, task) > 0 {
+				maxNeighbor = currentNeighbor
+			}
+		}
+	}
+
+	return maxNeighbor
 }

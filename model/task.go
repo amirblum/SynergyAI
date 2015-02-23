@@ -1,15 +1,17 @@
 package model
 
+//import "fmt"
+
 type Task struct {
 	Budget     int
-	Components map[Ability]float32
+	Components map[Ability]float64
 }
 
 func DummyTaskGenerator() (func() (Task, bool), bool) {
 	tasks := make([]Task, 2)
-	for i, task := range tasks {
-		task = Task{10, make(map[Ability]float32, 2)}
-		task.Components["Poop"] = float32(5 * (i + 1))
+	for i, _ := range tasks {
+		tasks[i] = Task{10, make(map[Ability]float64, 2)}
+		tasks[i].Components["Poop"] = float64(5 * (i + 1))
 	}
 
 	currTask := 0

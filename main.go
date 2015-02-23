@@ -16,10 +16,8 @@ func main() {
 
 	// Init learned world
 	world := model.CreateWorld(realWorld.Workers)
-	fmt.Printf("%v\n", len(world.Workers))
 
 	// Init Search agent
-	//    searchAgent := search.SearchAgent{search.HillClimbingAlgorithm{}}
 	searchAgent := search.CreateSearchAgent(search.HillClimbingAlgorithm{})
 
 	taskGenerator, hasNext := model.DummyTaskGenerator()
@@ -33,11 +31,12 @@ func main() {
 		// Find the optimal team
 		team := searchAgent.SearchTeam(world, task)
 
-		// Score the team
-		score := realWorld.ScoreTeam(team, task)
+		// Temporary print
+		score, fulfill := world.ScoreTeam(team, task)
+		fmt.Printf("The team %v received the score %v, with fulfillPercent %v\n", team, score, fulfill)
 
 		// Learn from experience
-		learning.LearnSynergy(world, team, task, score)
+		learning.LearnSynergy(world, realWorld, team, task)
 	}
 
 	fmt.Printf("%v\n", world.Synergy)
