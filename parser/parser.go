@@ -10,7 +10,7 @@ func LoadWorld(filename string) *model.World {
 
 	for i, _ := range workers {
 		worker := model.Worker{i, 1, make(map[model.Ability]float64, 1)}
-		worker.Components["Poop"] = float64((i + 1) * 5)
+		worker.Components["Poop"] = float64((2 - i) * 5)
 
 		workers[i] = worker
 	}

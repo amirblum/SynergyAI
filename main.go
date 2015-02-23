@@ -7,15 +7,11 @@ import (
 	"github.com/amirblum/SynergyAI/model"
 	synergyParser "github.com/amirblum/SynergyAI/parser"
 	"github.com/amirblum/SynergyAI/search"
-
-	"github.com/alexcesaro/log/stdlog"
 )
 
 var realWorld *model.World
 
 func main() {
-	logger := stdlog.GetFromFlags()
-
 	// Load real world from file
 	realWorld = synergyParser.LoadWorld("temp.world")
 
@@ -38,7 +34,7 @@ func main() {
 
 		// Temporary print
 		score, fulfill := world.ScoreTeam(team, task)
-		logger.Debugf("The team %v received the score %v for task %v, with fulfillPercent %v", team, score, task, fulfill)
+		fmt.Printf("The team %v received the score %v for task %v, with fulfillPercent %v\n", team, score, task, fulfill)
 
 		// Learn from experience
 		learning.LearnSynergy(world, realWorld, team, task)

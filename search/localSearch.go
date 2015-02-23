@@ -1,20 +1,17 @@
 package search
 
 import (
-	"github.com/alexcesaro/log/stdlog"
 	"github.com/amirblum/SynergyAI/model"
 )
 
 type HillClimbingAlgorithm struct{}
 
 func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) []model.Worker {
-	logger := stdlog.GetFromFlags()
 
 	current := &teamNode{make([]model.Worker, 0), make(map[int]bool)}
 
 	for {
 		maxNeighbor := alg.getMaxNeighbor(current, world, task)
-		logger.Debugf("maxNeighbor: %v", maxNeighbor)
 
 		// Check break condition
 		if maxNeighbor != nil && world.CompareTeams(maxNeighbor.Workers, current.Workers, task) <= 0 {
@@ -31,8 +28,7 @@ func (HillClimbingAlgorithm) getMaxNeighbor(current *teamNode, world *model.Worl
 	var maxNeighbor *teamNode = nil
 
 	// Get neighbors iterator
-	neighborsIterator, hasNext := current.successorIterator(world.Workers)
-	if hasNext {
+	if neighborsIterator, hasNext := current.successorIterator(world.Workers); hasNext {
 		// Initiailize maxNeighbor to be the first successor (cuz no do-while)
 		maxNeighbor, hasNext = neighborsIterator()
 
@@ -41,7 +37,7 @@ func (HillClimbingAlgorithm) getMaxNeighbor(current *teamNode, world *model.Worl
 			var currentNeighbor *teamNode
 			currentNeighbor, hasNext = neighborsIterator()
 
-			if world.CompareTeams(maxNeighbor.Workers, currentNeighbor.Workers, task) > 0 {
+			if world.CompareTeams(currentNeighbor.Workers, maxNeighbor.Workers, task) > 0 {
 				maxNeighbor = currentNeighbor
 			}
 		}

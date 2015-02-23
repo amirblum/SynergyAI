@@ -3,6 +3,7 @@ package search
 import (
 	"github.com/amirblum/SynergyAI/model"
 	"github.com/amirblum/goutils"
+	//    "fmt"
 )
 
 type SearchAlgorithm interface {
@@ -34,31 +35,30 @@ func (node *teamNode) copy() *teamNode {
 // Then remove the workers in the team on by one
 func (node *teamNode) successorIterator(allWorkers []model.Worker) (func() (*teamNode, bool), bool) {
 	// Init iterator
-	currentWorker := 0
+	nextWorker := 0
 	return func() (*teamNode, bool) {
-		prevWorker := currentWorker
-		currentWorker++
+		currentWorker := nextWorker
+		nextWorker++
 
 		// Find next worker that is not in the team
-		for currentWorker < len(allWorkers) && node.WorkerMap[prevWorker] == true {
-			prevWorker = currentWorker
-			currentWorker++
-			break
+		for nextWorker <= len(allWorkers) && node.WorkerMap[currentWorker] == true {
+			currentWorker = nextWorker
+			nextWorker++
 		}
 
 		// Copy the team
 		newTeam := node.copy()
 
 		// If there are more workers to add, add
-		if prevWorker < len(allWorkers) {
-			newTeam.Workers = append(newTeam.Workers, allWorkers[prevWorker])
-			newTeam.WorkerMap[prevWorker] = true
+		if currentWorker < len(allWorkers) {
+			newTeam.Workers = append(newTeam.Workers, allWorkers[currentWorker])
+			newTeam.WorkerMap[currentWorker] = true
 
-			return newTeam, (currentWorker < len(allWorkers)) || (len(node.Workers) > 0)
+			return newTeam, (nextWorker < len(allWorkers)) || (len(node.Workers) > 0)
 		}
 
 		// Finished returning teams with added workers, start removing workers
-		idToRemove := prevWorker - len(allWorkers)
+		idToRemove := currentWorker - len(allWorkers)
 
 		workerToRemove := newTeam.Workers[idToRemove]
 		newTeam.Workers = append(newTeam.Workers[:idToRemove], newTeam.Workers[idToRemove+1:]...)
