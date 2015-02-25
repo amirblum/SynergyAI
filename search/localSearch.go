@@ -28,7 +28,7 @@ func (HillClimbingAlgorithm) getMaxNeighbor(current *teamNode, world *model.Worl
 	var maxNeighbor *teamNode = nil
 
 	// Get neighbors iterator
-	if neighborsIterator, hasNext := current.successorIterator(world.Workers); hasNext {
+	if neighborsIterator, hasNext := current.IncrementalSuccessorIterator(world.Workers); hasNext {
 		// Initiailize maxNeighbor to be the first successor (cuz no do-while)
 		maxNeighbor, hasNext = neighborsIterator()
 

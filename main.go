@@ -33,7 +33,7 @@ func init() {
 func main() {
 	// Load real world from file
 	realWorld = model.LoadWorld(worldFile)
-
+	fmt.Println(realWorld)
 	// Init learned world
 	world := model.CreateWorld(realWorld.Workers)
 
@@ -56,14 +56,15 @@ func main() {
 
 		// Find the optimal team
 		team := searchAgent.SearchTeam(world, task)
-
 		// Temporary print
 		score, fulfill := world.ScoreTeam(team, task)
-		fmt.Printf("For task:\n%v\nThe team:\n%v\nReceived the score: %v, fulfillPercent: %v\n", task, team, score, fulfill)
+
+		realScore, realFulfill := realWorld.ScoreTeam(team, task)
+		fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
 
 		// Learn from experience
 		learningAgent.LearnSynergy(world, realWorld, team, task)
 	}
 
-	fmt.Printf("\nFinal Synergy: %v\n", world.Synergy)
+	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
 }

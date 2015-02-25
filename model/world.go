@@ -105,7 +105,7 @@ func (w *World) teamOutput(team Team, task Task) map[Ability]float64 {
 			for _, otherWorker := range team {
 				x, y := worker.ID, otherWorker.ID
 				if x != y {
-					if x > y {
+					if x < y {
 						x, y = y, x
 					}
 					// ...and multiply it with his dynamic with other worker in team
