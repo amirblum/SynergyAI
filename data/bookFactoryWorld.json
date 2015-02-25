@@ -1,0 +1,42 @@
+{
+  "Workers": [
+    {
+      "ID": 0,
+      "Salary": 10,
+      "Components": {
+        "book": 5,
+        "newspaper": 5
+      }
+    },
+    {
+      "ID": 1,
+      "Salary": 10,
+      "Components": {
+        "book": 10,
+        "newspaper": 0
+      }
+    },
+    {
+      "ID": 2,
+      "Salary": 10,
+      "Components": {
+        "book": 10,
+        "newspaper": 10
+      }
+    },
+    {
+      "ID": 3,
+      "Salary": 10,
+      "Components": {
+        "book": 0,
+        "newspaper": 3
+      }
+    }
+  ],
+  "Synergy": [
+    [1.0, 0.0, 0.0, 0.0],
+    [1.0, 1.0, 0.0, 0.0],
+    [1.0, 1.0, 1.0, 0.0],
+    [1.5, 1.5, 0.2, 1.0]
+  ]
+}

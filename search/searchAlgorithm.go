@@ -7,11 +7,11 @@ import (
 )
 
 type SearchAlgorithm interface {
-	SearchTeam(*model.World, model.Task) []model.Worker
+	SearchTeam(*model.World, model.Task) model.Team
 }
 
 type teamNode struct {
-	Workers   []model.Worker
+	Workers   model.Team
 	WorkerMap map[int]bool
 }
 
@@ -20,7 +20,7 @@ func (node *teamNode) copy() *teamNode {
 	newTeam := new(teamNode)
 
 	// Copy array
-	newTeam.Workers = make([]model.Worker, len(node.Workers))
+	newTeam.Workers = make(model.Team, len(node.Workers))
 	copy(newTeam.Workers, node.Workers)
 
 	// Copy map

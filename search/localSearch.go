@@ -6,9 +6,9 @@ import (
 
 type HillClimbingAlgorithm struct{}
 
-func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) []model.Worker {
+func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) model.Team {
 
-	current := &teamNode{make([]model.Worker, 0), make(map[int]bool)}
+	current := &teamNode{make(model.Team, 0), make(map[int]bool)}
 
 	for {
 		maxNeighbor := alg.getMaxNeighbor(current, world, task)

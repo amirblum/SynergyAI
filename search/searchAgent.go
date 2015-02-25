@@ -10,6 +10,6 @@ func CreateSearchAgent(alg SearchAlgorithm) *SearchAgent {
 	return &SearchAgent{alg}
 }
 
-func (agent SearchAgent) SearchTeam(world *model.World, task model.Task) []model.Worker {
+func (agent SearchAgent) SearchTeam(world *model.World, task model.Task) model.Team {
 	return agent.alg.SearchTeam(world, task)
 }

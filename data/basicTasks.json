@@ -1,0 +1,9 @@
+[
+  {
+    "Weight": 1,
+    "Budget": {"Expect": 100.0, "Variance": 50.0},
+    "Components": {
+      "basic": {"Expect": 7.0, "Variance": 3.0}
+    }
+  }
+]

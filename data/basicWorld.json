@@ -1,0 +1,22 @@
+{
+  "Workers": [
+    {
+      "ID": 0,
+      "Salary": 10,
+      "Components": {
+        "basic": 5
+      }
+    },
+    {
+      "ID": 1,
+      "Salary": 50,
+      "Components": {
+        "basic": 10
+      }
+    }
+  ],
+  "Synergy": [
+    [1, 0.1],
+    [0.1, 1]
+  ]
+}

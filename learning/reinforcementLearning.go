@@ -6,7 +6,7 @@ type TemporalDifferenceAlgorithm struct {
 	Eta float64
 }
 
-func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.World, team []model.Worker, task model.Task) {
+func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.World, team model.Team, task model.Task) {
 	// Create a "boring world", where no-one affects anyone elses work. This gives us a normalizing factor.
 	boringWorld := model.CreateWorld(world.Workers)
 	normalizingFactor, _ := boringWorld.ScoreTeam(team, task)
@@ -28,7 +28,7 @@ func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.Worl
 	// Update the matrix
 	for _, worker := range team {
 		for _, otherWorker := range team {
-			if worker.ID != otherWorker.ID {
+			if worker.ID > otherWorker.ID {
 				world.Synergy[worker.ID][otherWorker.ID] += difference * alg.Eta
 			}
 		}
