@@ -1,12 +1,63 @@
 package learning
 
-import "github.com/amirblum/SynergyAI/model"
+import (
+	"github.com/amirblum/SynergyAI/model"
+)
 
-type TemporalDifferenceAlgorithm struct {
-	Eta float64
+type DeltaCalcer interface {
+	CalcDelta(float64) (float64, bool)
 }
 
-func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.World, team model.Team, task model.Task) {
+// Just returns the difference
+type SimpleDelta struct {
+	eta float64
+}
+
+func CreateSimpleDelta(eta float64) *SimpleDelta {
+	return &SimpleDelta{eta}
+}
+
+func (delta *SimpleDelta) CalcDelta(diff float64) (float64, bool) {
+	return delta.eta * diff, true
+}
+
+// Average the difference and return the average
+type AverageDelta struct {
+	eta             float64
+	lastDifferences []float64
+	frequency       int
+	count           int
+}
+
+func CreateAverageDelta(eta float64, frequency int) *AverageDelta {
+	return &AverageDelta{eta, make([]float64, frequency), frequency, 0}
+}
+
+func (delta *AverageDelta) CalcDelta(diff float64) (float64, bool) {
+	if delta.count == delta.frequency {
+		sum := 0.
+		for i := 0; i < delta.frequency; i++ {
+			sum += delta.lastDifferences[i]
+		}
+		delta.count = 0
+		delta.lastDifferences = make([]float64, delta.frequency)
+		return delta.eta * (sum / float64(delta.frequency)), true
+	}
+
+	delta.lastDifferences[delta.count] = diff
+	delta.count++
+	return 0, false
+}
+
+type TemporalDifferenceAlgorithm struct {
+	deltaCalcer DeltaCalcer
+}
+
+func CreateTemporalDifferenceAlgorithm(calcer DeltaCalcer) *TemporalDifferenceAlgorithm {
+	return &TemporalDifferenceAlgorithm{calcer}
+}
+
+func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.World, team *model.Team, task model.Task) {
 	// Create a "boring world", where no-one affects anyone elses work. This gives us a normalizing factor.
 	boringWorld := model.CreateWorld(world.Workers)
 	normalizingFactor, _ := boringWorld.ScoreTeam(team, task)
@@ -23,13 +74,14 @@ func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.Worl
 	difference := (realScore - myScore)
 
 	// In addition, we further reduce the difference because bigger teams give a bigger score.
-	difference /= float64(len(team))
-
-	// Update the matrix
-	for _, worker := range team {
-		for _, otherWorker := range team {
-			if worker.ID > otherWorker.ID {
-				world.Synergy[worker.ID][otherWorker.ID] += difference * alg.Eta
+	difference /= float64(team.Length())
+	if delta, toChange := alg.deltaCalcer.CalcDelta(difference); toChange {
+		// Update the matrix
+		for _, worker := range team.Workers {
+			for _, otherWorker := range team.Workers {
+				if worker.ID > otherWorker.ID {
+					world.Synergy[worker.ID][otherWorker.ID] += delta
+				}
 			}
 		}
 	}

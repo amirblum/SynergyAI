@@ -2,37 +2,21 @@ package search
 
 import (
 	"github.com/amirblum/SynergyAI/model"
-	"github.com/amirblum/goutils"
 	"math/rand"
 )
 
 type SearchAlgorithm interface {
-	SearchTeam(*model.World, model.Task) model.Team
+	SearchTeam(*model.World, model.Task) *model.Team
 }
 
-type teamNode struct {
-	Workers   model.Team
-	WorkerMap map[int]bool
-}
-
-// Copy a teamNode
-func (node *teamNode) copy() *teamNode {
-	newTeam := new(teamNode)
-
-	// Copy array
-	newTeam.Workers = make(model.Team, len(node.Workers))
-	copy(newTeam.Workers, node.Workers)
-
-	// Copy map
-	newTeam.WorkerMap = make(map[int]bool)
-	goutils.CopyMap(node.WorkerMap, newTeam.WorkerMap)
-
-	return newTeam
-}
+//type teamNode struct {
+//	Workers   model.Team
+//	WorkerMap map[int]bool
+//}
 
 // An iterator that returns successors sequentially
-func (node *teamNode) IncrementalSuccessorIterator(allWorkers []model.Worker) (func() (*teamNode, bool), bool) {
-	return node.successorIterator(allWorkers, incrementalIterator(len(allWorkers)+len(node.Workers)))
+func IncrementalSuccessorIterator(team *model.Team, allWorkers []model.Worker) (func() (*model.Team, bool), bool) {
+	return successorIterator(team, allWorkers, incrementalIterator(len(allWorkers)+team.Length()))
 }
 
 func incrementalIterator(incrementRange int) func(int) (int, bool) {
@@ -43,8 +27,8 @@ func incrementalIterator(incrementRange int) func(int) (int, bool) {
 }
 
 // An iterator that returns a random successor
-func (node *teamNode) RandomSuccessorIterator(allWorkers []model.Worker) (func() (*teamNode, bool), bool) {
-	return node.successorIterator(allWorkers, randomIterator(len(allWorkers)+len(node.Workers)))
+func RandomSuccessorIterator(team *model.Team, allWorkers []model.Worker) (func() (*model.Team, bool), bool) {
+	return successorIterator(team, allWorkers, randomIterator(len(allWorkers)+team.Length()))
 }
 
 func randomIterator(incrementRange int) func(int) (int, bool) {
@@ -57,10 +41,10 @@ func randomIterator(incrementRange int) func(int) (int, bool) {
 // Iterator producing the successors of a given teamNode.
 // First add all the workers (that are not in the team) one by one
 // Then remove the workers in the team on by one
-func (node *teamNode) successorIterator(allWorkers []model.Worker, indexIterator func(int) (int, bool)) (func() (*teamNode, bool), bool) {
+func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterator func(int) (int, bool)) (func() (*model.Team, bool), bool) {
 	// Init iterator
 	nextWorker, hasNext := indexIterator(-1)
-	return func() (*teamNode, bool) {
+	return func() (*model.Team, bool) {
 		currentWorker := nextWorker
 		nextWorker, hasNext = indexIterator(nextWorker)
 
@@ -71,12 +55,12 @@ func (node *teamNode) successorIterator(allWorkers []model.Worker, indexIterator
 		}
 
 		// Copy the team
-		newTeam := node.copy()
+		newTeam := node.Copy()
 
 		// If there are more workers to add, add
 		if currentWorker < len(allWorkers) {
 			newTeam.Workers = append(newTeam.Workers, allWorkers[currentWorker])
-			newTeam.WorkerMap[currentWorker] = true
+			newTeam.WorkerMap[allWorkers[currentWorker].ID] = true
 
 			return newTeam, hasNext
 		}
@@ -92,42 +76,3 @@ func (node *teamNode) successorIterator(allWorkers []model.Worker, indexIterator
 
 	}, hasNext
 }
-
-//// Iterator producing the successors of a given teamNode.
-//// First add all the workers (that are not in the team) one by one
-//// Then remove the workers in the team on by one
-//func (node *teamNode) successorIterator(allWorkers []model.Worker) (func() (*teamNode, bool), bool) {
-//	// Init iterator
-//	nextWorker := 0
-//	return func() (*teamNode, bool) {
-//		currentWorker := nextWorker
-//		nextWorker++
-//
-//		// Find next worker that is not in the team
-//		for nextWorker <= len(allWorkers) && node.WorkerMap[currentWorker] == true {
-//			currentWorker = nextWorker
-//			nextWorker++
-//		}
-//
-//		// Copy the team
-//		newTeam := node.copy()
-//
-//		// If there are more workers to add, add
-//		if currentWorker < len(allWorkers) {
-//			newTeam.Workers = append(newTeam.Workers, allWorkers[currentWorker])
-//			newTeam.WorkerMap[currentWorker] = true
-//
-//			return newTeam, (nextWorker < len(allWorkers)) || (len(node.Workers) > 0)
-//		}
-//
-//		// Finished returning teams with added workers, start removing workers
-//		idToRemove := currentWorker - len(allWorkers)
-//
-//		workerToRemove := newTeam.Workers[idToRemove]
-//		newTeam.Workers = append(newTeam.Workers[:idToRemove], newTeam.Workers[idToRemove+1:]...)
-//		newTeam.WorkerMap[workerToRemove.ID] = false
-//
-//		return newTeam, (idToRemove < len(node.Workers)-1)
-//
-//	}, (len(allWorkers) > 0)
-//}

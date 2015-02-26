@@ -42,7 +42,7 @@ func CreateWorld(workers []Worker) *World {
 	return w
 }
 
-func (w *World) CompareTeams(team1, team2 Team, task Task) int {
+func (w *World) CompareTeams(team1, team2 *Team, task Task) int {
 	score1, fulfillPercent1 := w.ScoreTeam(team1, task)
 	score2, fulfillPercent2 := w.ScoreTeam(team2, task)
 
@@ -63,7 +63,7 @@ func (w *World) CompareTeams(team1, team2 Team, task Task) int {
 	}
 }
 
-func (w *World) ScoreTeam(team Team, task Task) (score float64, fulfillPercent float64) {
+func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent float64) {
 	componentSum := 0.
 	for _, component := range task.Components {
 		componentSum += component
@@ -93,16 +93,16 @@ func (w *World) ScoreTeam(team Team, task Task) (score float64, fulfillPercent f
 }
 
 // Calculate the output of the team for each component.
-func (w *World) teamOutput(team Team, task Task) map[Ability]float64 {
+func (w *World) teamOutput(team *Team, task Task) map[Ability]float64 {
 	output := make(map[Ability]float64, len(task.Components))
 
 	// For each component
 	for ability, _ := range task.Components {
 		// For each worker
-		for _, worker := range team {
+		for _, worker := range team.Workers {
 			// Take the workers ability...
 			workerOutput := worker.Components[ability]
-			for _, otherWorker := range team {
+			for _, otherWorker := range team.Workers {
 				x, y := worker.ID, otherWorker.ID
 				if x != y {
 					if x < y {

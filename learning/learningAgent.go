@@ -10,6 +10,6 @@ func CreateLearningAgent(alg LearningAlgorithm) *LearningAgent {
 	return &LearningAgent{alg}
 }
 
-func (agent LearningAgent) LearnSynergy(world, realWorld *model.World, team model.Team, task model.Task) {
+func (agent LearningAgent) LearnSynergy(world, realWorld *model.World, team *model.Team, task model.Task) {
 	agent.alg.LearnSynergy(world, realWorld, team, task)
 }

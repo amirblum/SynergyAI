@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"flag"
+	"github.com/amirblum/SynergyAI/agents"
 	"github.com/amirblum/SynergyAI/learning"
 	"github.com/amirblum/SynergyAI/model"
 	"github.com/amirblum/SynergyAI/search"
@@ -37,16 +38,21 @@ func main() {
 	// Init learned world
 	world := model.CreateWorld(realWorld.Workers)
 
-	// Init Search agent
-	searchAgent := search.CreateSearchAgent(search.HillClimbingAlgorithm{})
+	// Init Search algorithm
+	searchAlgorithm := search.HillClimbingAlgorithm{}
 
-	// Init Learning agent
-	learningAgent := learning.CreateLearningAgent(learning.TemporalDifferenceAlgorithm{0.1})
+	// Init Learning algorithm
+	learningAgent := learning.CreateLearningAgent(learning.CreateTemporalDifferenceAlgorithm(learning.CreateAverageDelta(0.1, 30)))
+
+	// Init the agent
+	//    synergyAgent := agents.CreateBond(searchAlgorithm, learningAgent, realWorld)
+	synergyAgent := agents.CreatePowers(searchAlgorithm, learningAgent, realWorld, agents.RandomTeam)
 
 	taskGenerator, hasNext := model.DummyTaskGenerator()
 	if tasksFile != "" {
 		taskGenerator, hasNext = model.FileTaskGenerator(tasksFile, taskAmount)
 	}
+
 	for hasNext {
 		// Log current worldview
 
@@ -54,16 +60,20 @@ func main() {
 		var task model.Task
 		task, hasNext = taskGenerator()
 
-		// Find the optimal team
-		team := searchAgent.SearchTeam(world, task)
+		//		// Find the optimal team
+		//		team := searchAlgorithm.SearchTeam(world, task)
+		//
+		//		// Learn from experience
+		//		learningAgent.LearnSynergy(world, realWorld, team, task)
+
+		//        team := synergyAgent.GetTeam(world, task)
+		synergyAgent.GetTeam(world, task)
+
 		// Temporary print
-		score, fulfill := world.ScoreTeam(team, task)
-
-		realScore, realFulfill := realWorld.ScoreTeam(team, task)
-		fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
-
-		// Learn from experience
-		learningAgent.LearnSynergy(world, realWorld, team, task)
+		//		score, fulfill := world.ScoreTeam(team, task)
+		//
+		//		realScore, realFulfill := realWorld.ScoreTeam(team, task)
+		//		fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
 	}
 
 	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
