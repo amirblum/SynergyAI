@@ -6,6 +6,10 @@ import (
 
 type HillClimbingAlgorithm struct{}
 
+func CreateHillClimbingAlgorithm() *HillClimbingAlgorithm {
+	return &HillClimbingAlgorithm{}
+}
+
 func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) *model.Team {
 
 	current := new(model.Team)

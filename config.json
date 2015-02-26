@@ -1,0 +1,17 @@
+{
+  "World": "data/bookFactoryWorld.json",
+  "Tasks": "data/bookFactoryTasks.json",
+  "TasksAmount": 1000,
+  "RandomSeed": 6,
+  "SearchAlgorithm": "HillClimbing",
+  "LearningConfig": {
+    "LearningAlgorithm": "TemporalDifference",
+    "DeltaCalcer": "Simple",
+    "Eta": 0.1,
+    "Frequency": 30
+  },
+  "AgentConfig": {
+    "SynergyAgent": "Powers",
+    "AgentChooser": "Random"
+  }
+}

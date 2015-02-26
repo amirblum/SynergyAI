@@ -4,15 +4,17 @@ import (
 	"fmt"
 
 	"flag"
-	"github.com/amirblum/SynergyAI/agents"
-	"github.com/amirblum/SynergyAI/learning"
+	//	"github.com/amirblum/SynergyAI/agents"
+	//	"github.com/amirblum/SynergyAI/learning"
 	"github.com/amirblum/SynergyAI/model"
-	"github.com/amirblum/SynergyAI/search"
+	//	"github.com/amirblum/SynergyAI/search"
 	"math/rand"
 	"time"
+	//    "github.com/amirblum/SynergyAI"
 )
 
 // Command line flags
+var configFile string
 var worldFile string
 var tasksFile string
 var taskAmount int
@@ -20,6 +22,8 @@ var taskAmount int
 var realWorld *model.World
 
 func init() {
+	flag.StringVar(&configFile, "config", "", "Config JSON file")
+
 	flag.StringVar(&worldFile, "world", "", "World JSON file")
 	flag.StringVar(&tasksFile, "tasks", "", "Tasks JSON file")
 	flag.IntVar(&taskAmount, "taskAmount", 50, "Amount of tasks to run")
@@ -32,21 +36,26 @@ func init() {
 }
 
 func main() {
+	// Load config
+	config := LoadConfig(configFile)
+
 	// Load real world from file
-	realWorld = model.LoadWorld(worldFile)
+	realWorld = model.LoadWorld(config.World)
 	fmt.Println(realWorld)
 	// Init learned world
 	world := model.CreateWorld(realWorld.Workers)
 
-	// Init Search algorithm
-	searchAlgorithm := search.HillClimbingAlgorithm{}
+	//	// Init Search algorithm
+	//	searchAlgorithm := search.HillClimbingAlgorithm{}
+	//
+	//	// Init Learning algorithm
+	//	learningAgent := learning.CreateLearningAgent(learning.CreateTemporalDifferenceAlgorithm(learning.CreateAverageDelta(0.1, 30)))
+	//
+	//	// Init the agent
+	//	//    synergyAgent := agents.CreateBond(searchAlgorithm, learningAgent, realWorld)
+	//	synergyAgent := agents.CreatePowers(searchAlgorithm, learningAgent, realWorld, agents.RandomTeam)
 
-	// Init Learning algorithm
-	learningAgent := learning.CreateLearningAgent(learning.CreateTemporalDifferenceAlgorithm(learning.CreateAverageDelta(0.1, 30)))
-
-	// Init the agent
-	//    synergyAgent := agents.CreateBond(searchAlgorithm, learningAgent, realWorld)
-	synergyAgent := agents.CreatePowers(searchAlgorithm, learningAgent, realWorld, agents.RandomTeam)
+	synergyAgent := config.CreateAgent(realWorld)
 
 	taskGenerator, hasNext := model.DummyTaskGenerator()
 	if tasksFile != "" {
