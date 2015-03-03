@@ -8,7 +8,7 @@ import (
 
 type Worker struct {
 	ID         int
-	Salary     int
+	Salary     float64
 	Components map[Ability]float64
 }
 

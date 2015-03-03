@@ -12,6 +12,11 @@ import (
 	"os"
 )
 
+type SearchConfig struct {
+	SearchAlgorithm string
+	NeighborPicker  string
+}
+
 type LearningConfig struct {
 	LearningAlgorithm string
 	DeltaCalcer       string
@@ -25,13 +30,14 @@ type AgentConfig struct {
 }
 
 type Config struct {
-	World           string
-	Tasks           string
-	TasksAmount     int
-	RandomSeed      int64
-	SearchAlgorithm string
-	LearningConfig  LearningConfig
-	AgentConfig     AgentConfig
+	World          string
+	Budget         bool
+	Tasks          string
+	TasksAmount    int
+	RandomSeed     int64
+	SearchConfig   SearchConfig
+	LearningConfig LearningConfig
+	AgentConfig    AgentConfig
 }
 
 func LoadConfig(filename string) *Config {
@@ -50,11 +56,19 @@ func LoadConfig(filename string) *Config {
 }
 
 func (config *Config) CreateSearchAlgorithm() search.SearchAlgorithm {
-	var alg search.SearchAlgorithm
+	var neighborPicker search.NeighborPicker
+	switch config.SearchConfig.NeighborPicker {
+	case "Max":
+		neighborPicker = search.MaxNeighbor
+		break
+	case "FirstChoice":
+		neighborPicker = search.FirstChoiceNeighbor
+	}
 
-	switch config.SearchAlgorithm {
+	var alg search.SearchAlgorithm
+	switch config.SearchConfig.SearchAlgorithm {
 	case "HillClimbing":
-		alg = search.CreateHillClimbingAlgorithm()
+		alg = search.CreateHillClimbingAlgorithm(neighborPicker)
 		break
 	}
 
@@ -101,8 +115,6 @@ func (config *Config) CreateAgent(realWorld *model.World) agents.SynergyAgent {
 		agent = agents.CreatePowers(config.CreateSearchAlgorithm(), config.CreateLearningAlgorithm(), realWorld, chooser)
 		break
 	}
-
-	//    fmt.Printf()
 
 	return agent
 }

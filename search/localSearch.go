@@ -4,10 +4,14 @@ import (
 	"github.com/amirblum/SynergyAI/model"
 )
 
-type HillClimbingAlgorithm struct{}
+type HillClimbingAlgorithm struct {
+	neighborPicker NeighborPicker
+}
 
-func CreateHillClimbingAlgorithm() *HillClimbingAlgorithm {
-	return &HillClimbingAlgorithm{}
+type NeighborPicker func(*model.Team, *model.World, model.Task) *model.Team
+
+func CreateHillClimbingAlgorithm(neighborPicker NeighborPicker) *HillClimbingAlgorithm {
+	return &HillClimbingAlgorithm{neighborPicker}
 }
 
 func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) *model.Team {
@@ -15,20 +19,20 @@ func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task)
 	current := new(model.Team)
 
 	for {
-		maxNeighbor := alg.getMaxNeighbor(current, world, task)
+		nextNeighbor := alg.neighborPicker(current, world, task)
 
 		// Check break condition
-		if maxNeighbor != nil && world.CompareTeams(maxNeighbor, current, task) <= 0 {
+		if nextNeighbor != nil && world.CompareTeams(nextNeighbor, current, task) <= 0 {
 			return current
 		}
 
 		// Continue iteration
-		current = maxNeighbor
+		current = nextNeighbor
 	}
 }
 
 // Find highest neighbor
-func (HillClimbingAlgorithm) getMaxNeighbor(current *model.Team, world *model.World, task model.Task) *model.Team {
+func MaxNeighbor(current *model.Team, world *model.World, task model.Task) *model.Team {
 	var maxNeighbor *model.Team = nil
 
 	// Get neighbors iterator
@@ -48,4 +52,22 @@ func (HillClimbingAlgorithm) getMaxNeighbor(current *model.Team, world *model.Wo
 	}
 
 	return maxNeighbor
+}
+
+// Find first neighbor
+func FirstChoiceNeighbor(current *model.Team, world *model.World, task model.Task) *model.Team {
+	// Get neighbors iterator
+	if neighborsIterator, hasNext := RandomSuccessorIterator(current, world.Workers); hasNext {
+		// Find the first bigger neighbor (if exists)
+		for hasNext {
+			var nextNeighbor *model.Team
+			nextNeighbor, hasNext = neighborsIterator()
+
+			if world.CompareTeams(nextNeighbor, current, task) > 0 {
+				return nextNeighbor
+			}
+		}
+	}
+
+	return model.CreateTeamNode(make([]model.Worker, 0), world.Workers)
 }

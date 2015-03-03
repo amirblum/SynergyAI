@@ -58,12 +58,21 @@ func CreateTemporalDifferenceAlgorithm(calcer DeltaCalcer) *TemporalDifferenceAl
 }
 
 func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.World, team *model.Team, task model.Task) {
-	// Create a "boring world", where no-one affects anyone elses work. This gives us a normalizing factor.
-	boringWorld := model.CreateWorld(world.Workers)
-	normalizingFactor, _ := boringWorld.ScoreTeam(team, task)
+	// Nothing to learn from teams smaller than 2
+	if team.Length() < 2 {
+		return
+	}
 
-	myScore, _ := world.ScoreTeam(team, task)
-	realScore, _ := realWorld.ScoreTeam(team, task)
+	// Create a "boring world", where no-one affects anyone elses work. This gives us a normalizing factor.
+	boringWorld := model.CreateWorld(world.Workers, false)
+	normalizingFactor, _, _ := boringWorld.ScoreTeam(team, task)
+	// Cover our asses in case of bad team
+	if normalizingFactor == 0 {
+		return
+	}
+
+	myScore, _, _ := world.ScoreTeam(team, task)
+	realScore, _, _ := realWorld.ScoreTeam(team, task)
 
 	// We normalize the scores to reduce influence from the scale of the ability.
 	// This way, the resulting difference is on a similar scale to the synergies, and can be used to

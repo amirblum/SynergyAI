@@ -2,7 +2,7 @@
   {
     "Name": "Many books",
     "Weight": 1,
-    "Budget": {"Expect": 100.0, "Variance": 50.0},
+    "Budget": {"Expect": 10.0, "Variance": 50.0},
     "Components": {
       "book": {"Expect": 25.0, "Variance": 5.0},
       "newspaper": {"Expect": 0.0, "Variance": 5.0}
@@ -11,7 +11,7 @@
   {
     "Name": "Many newspaper",
     "Weight": 1,
-    "Budget": {"Expect": 100.0, "Variance": 50.0},
+    "Budget": {"Expect": 10.0, "Variance": 50.0},
     "Components": {
       "book": {"Expect": 0.0, "Variance": 5.0},
       "newspaper": {"Expect": 15.0, "Variance": 5.0}
@@ -20,7 +20,7 @@
   {
     "Name": "Balanced",
     "Weight": 1,
-    "Budget": {"Expect": 100.0, "Variance": 50.0},
+    "Budget": {"Expect": 10.0, "Variance": 50.0},
     "Components": {
       "book": {"Expect": 25.0, "Variance": 5.0},
       "newspaper": {"Expect": 15.0, "Variance": 5.0}

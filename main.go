@@ -39,10 +39,9 @@ func main() {
 	realWorld = model.LoadWorld(config.World)
 	fmt.Println(realWorld)
 	// Init learned world
-	world := model.CreateWorld(realWorld.Workers)
+	world := model.CreateWorld(realWorld.Workers, config.Budget)
 
 	synergyAgent := config.CreateAgent(realWorld)
-	fmt.Println(synergyAgent)
 
 	taskGenerator, hasNext := model.DummyTaskGenerator()
 	if config.Tasks != "" {

@@ -8,7 +8,7 @@ import (
 
 type Task struct {
 	Name       string
-	Budget     int
+	Budget     float64
 	Components map[Ability]float64
 }
 
@@ -41,7 +41,7 @@ type taskTemplate struct {
 func (template taskTemplate) generateTask() Task {
 
 	// Set budget
-	budget := int(math.Max(0, rand.NormFloat64()*math.Sqrt(template.Budget.Variance)+template.Budget.Expect))
+	budget := math.Max(0, rand.NormFloat64()*math.Sqrt(template.Budget.Variance)+template.Budget.Expect)
 
 	// Set components
 	components := make(map[Ability]float64)

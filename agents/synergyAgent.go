@@ -17,9 +17,9 @@ func RandomTeam(searchAlg search.SearchAlgorithm, world *model.World, task model
 
 func AugmentedOptimalTeam(searchAlg search.SearchAlgorithm, world *model.World, task model.Task) *model.Team {
 	optimalTeam := searchAlg.SearchTeam(world, task)
-	distance := (optimalTeam.Length() * 3) / 10
+	distance := (optimalTeam.Length()*3)/10 + 1
 
-	var team *model.Team
+	team := model.CreateTeamNode(optimalTeam.Workers, world.Workers)
 	randomIterator, hasNext := search.RandomSuccessorIterator(optimalTeam, world.Workers)
 	for i := 0; i < distance && hasNext; i++ {
 		if hasNext {

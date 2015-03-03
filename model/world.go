@@ -21,12 +21,14 @@ func (matrix SynergyMatrix) String() string {
 type World struct {
 	Workers []Worker
 	Synergy SynergyMatrix
+	budget  bool
 }
 
 // Create a new world
-func CreateWorld(workers []Worker) *World {
+func CreateWorld(workers []Worker, budget bool) *World {
 	var w *World = new(World)
-
+	// Init budget
+	w.budget = budget
 	// Initialize workers
 	w.Workers = workers
 
@@ -43,9 +45,18 @@ func CreateWorld(workers []Worker) *World {
 }
 
 func (w *World) CompareTeams(team1, team2 *Team, task Task) int {
-	score1, fulfillPercent1 := w.ScoreTeam(team1, task)
-	score2, fulfillPercent2 := w.ScoreTeam(team2, task)
-
+	score1, fulfillPercent1, inBudget1 := w.ScoreTeam(team1, task)
+	score2, fulfillPercent2, inBudget2 := w.ScoreTeam(team2, task)
+	// Consider budget
+	if w.budget {
+		if inBudget1 != inBudget2 {
+			if inBudget1 {
+				return 1
+			} else {
+				return -1
+			}
+		}
+	}
 	if fulfillPercent1 == fulfillPercent2 {
 		if score1 < score2 {
 			return -1
@@ -63,14 +74,20 @@ func (w *World) CompareTeams(team1, team2 *Team, task Task) int {
 	}
 }
 
-func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent float64) {
+func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent float64, inBudget bool) {
+	// Calculate budget
+	budgetSum := 0.
+	for _, worker := range team.Workers {
+		budgetSum += worker.Salary
+	}
+
 	componentSum := 0.
 	for _, component := range task.Components {
 		componentSum += component
 	}
 
 	if componentSum == 0 {
-		return 1., 1.
+		return 1., 1., budgetSum <= task.Budget
 	}
 
 	outputMap := w.teamOutput(team, task)
@@ -89,7 +106,7 @@ func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent 
 		fulfillPercent += math.Min(1., outputRelation) * componentPercent
 	}
 
-	return score, fulfillPercent
+	return score, fulfillPercent, budgetSum <= task.Budget
 }
 
 // Calculate the output of the team for each component.

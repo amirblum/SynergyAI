@@ -3,16 +3,13 @@ package search
 import (
 	"github.com/amirblum/SynergyAI/model"
 	"math/rand"
+	//    "fmt"
+	//    "os"
 )
 
 type SearchAlgorithm interface {
 	SearchTeam(*model.World, model.Task) *model.Team
 }
-
-//type teamNode struct {
-//	Workers   model.Team
-//	WorkerMap map[int]bool
-//}
 
 // An iterator that returns successors sequentially
 func IncrementalSuccessorIterator(team *model.Team, allWorkers []model.Worker) (func() (*model.Team, bool), bool) {
@@ -32,9 +29,11 @@ func RandomSuccessorIterator(team *model.Team, allWorkers []model.Worker) (func(
 }
 
 func randomIterator(incrementRange int) func(int) (int, bool) {
+	permutation := rand.Perm(incrementRange)
+	current := -1
 	return func(num int) (int, bool) {
-		num = rand.Intn(incrementRange)
-		return num, true
+		current++
+		return permutation[current], current < incrementRange-1
 	}
 }
 
@@ -43,16 +42,11 @@ func randomIterator(incrementRange int) func(int) (int, bool) {
 // Then remove the workers in the team on by one
 func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterator func(int) (int, bool)) (func() (*model.Team, bool), bool) {
 	// Init iterator
-	nextWorker, hasNext := indexIterator(-1)
+	nextWorker, hasNext := findNextIndex(indexIterator, -1, allWorkers, node)
+
 	return func() (*model.Team, bool) {
 		currentWorker := nextWorker
-		nextWorker, hasNext = indexIterator(nextWorker)
-
-		// Find next worker that is not in the team
-		for nextWorker <= len(allWorkers) && node.WorkerMap[currentWorker] == true {
-			currentWorker = nextWorker
-			nextWorker, hasNext = indexIterator(nextWorker)
-		}
+		nextWorker, hasNext = findNextIndex(indexIterator, nextWorker, allWorkers, node)
 
 		// Copy the team
 		newTeam := node.Copy()
@@ -75,4 +69,15 @@ func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterato
 		return newTeam, hasNext
 
 	}, hasNext
+}
+
+func findNextIndex(indexIterator func(int) (int, bool), currentIndex int, allWorkers []model.Worker, node *model.Team) (int, bool) {
+	nextIndex, hasNext := indexIterator(currentIndex)
+
+	// Find next worker that is not in the team
+	for nextIndex <= len(allWorkers) && node.WorkerMap[nextIndex] == true && hasNext {
+		nextIndex, hasNext = indexIterator(nextIndex)
+	}
+
+	return nextIndex, hasNext
 }
