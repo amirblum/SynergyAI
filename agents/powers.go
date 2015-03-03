@@ -23,11 +23,11 @@ func CreatePowers(searchAlg search.SearchAlgorithm, learningAlg learning.Learnin
 
 func (austin *Powers) GetTeam(world *model.World, task model.Task) *model.Team {
 	// With probability 20%, choose a team other than the optimal
-	teamProp := rand.Intn(5)
+	teamProb := rand.Intn(5)
 
 	var team *model.Team
 
-	if teamProp == 0 {
+	if teamProb == 0 {
 		team = austin.agentChooser(austin.searchAlg, world, task)
 	} else {
 		// Find the optimal team

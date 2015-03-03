@@ -69,12 +69,18 @@ func (node *Team) Copy() *Team {
 }
 
 func (team Team) String() string {
+	if team.Length() == 0 {
+		return "Empty"
+	}
+
 	var s string
+
 	for i, worker := range team.Workers {
 		s += fmt.Sprintf("%v", worker)
 		if i < team.Length()-1 {
 			s += "\n"
 		}
 	}
+
 	return s
 }

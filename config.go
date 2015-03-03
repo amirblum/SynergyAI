@@ -102,5 +102,7 @@ func (config *Config) CreateAgent(realWorld *model.World) agents.SynergyAgent {
 		break
 	}
 
+	//    fmt.Printf()
+
 	return agent
 }
