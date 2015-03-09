@@ -74,6 +74,8 @@ func (alg LocalBeamAlgorithm) SearchTeam(world *model.World, task model.Task) *m
 				}
 			}()
 		}
+
+		// Wait for threads
 		wg.Wait()
 
 		// Initialize new currents

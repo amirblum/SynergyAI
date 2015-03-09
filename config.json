@@ -1,13 +1,13 @@
 {
-  "World": "data/bookFactoryWorld.json",
+  "World": "data/bookFactoryWorld8.json",
   "Budget": false,
   "Tasks": "data/bookFactoryTasks.json",
-  "TasksAmount": 1000,
+  "TasksAmount": 10000,
   "RandomSeed": 6,
   "SearchConfig": {
-    "SearchAlgorithm": "HillClimbing",
-    "NeighborPicker": "Max",
-    "NumBeams": 3
+    "SearchAlgorithm": "BeamSearch",
+    "NeighborPicker": "FirstChoice",
+    "NumBeams": 4
   },
   "LearningConfig": {
     "LearningAlgorithm": "TemporalDifference",
@@ -16,7 +16,7 @@
     "Frequency": 30
   },
   "AgentConfig": {
-    "SynergyAgent": "Bond",
+    "SynergyAgent": "Powers",
     "AgentChooser": "Augmented"
   }
 }

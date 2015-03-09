@@ -12,8 +12,8 @@ type SynergyMatrix []SynergyRow
 
 func (matrix SynergyMatrix) String() string {
 	s := ""
-	for _, row := range matrix {
-		s += fmt.Sprintf("%v\n", row)
+	for i, row := range matrix {
+		s += fmt.Sprintf("%d: %.2f\n", i, row)
 	}
 	return s
 }

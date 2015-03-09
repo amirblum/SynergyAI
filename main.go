@@ -58,11 +58,12 @@ func main() {
 		synergyAgent.GetTeam(world, task)
 
 		//		Temporary print
-		//				score, fulfill := world.ScoreTeam(team, task)
+		//        score, fulfill, _ := world.ScoreTeam(team, task)
 		//
-		//				realScore, realFulfill := realWorld.ScoreTeam(team, task)
-		//				fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
+		//        realScore, realFulfill, _ := realWorld.ScoreTeam(team, task)
+		//        fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
 	}
 
+	fmt.Printf("\nReal-World Synergy: \n%v\n", realWorld.Synergy)
 	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
 }

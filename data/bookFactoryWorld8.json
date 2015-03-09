@@ -1,0 +1,78 @@
+{
+  "Workers": [
+    {
+      "ID": 0,
+      "Salary": 10,
+      "Components": {
+        "book": 5,
+        "newspaper": 5
+      }
+    },
+    {
+      "ID": 1,
+      "Salary": 10,
+      "Components": {
+        "book": 10,
+        "newspaper": 1
+      }
+    },
+    {
+      "ID": 2,
+      "Salary": 10,
+      "Components": {
+        "book": 8,
+        "newspaper": 20
+      }
+    },
+    {
+      "ID": 3,
+      "Salary": 10,
+      "Components": {
+        "book": 10,
+        "newspaper": 3
+      }
+    },
+    {
+      "ID": 4,
+      "Salary": 10,
+      "Components": {
+        "book": 5,
+        "newspaper": 5
+      }
+    },
+    {
+      "ID": 5,
+      "Salary": 10,
+      "Components": {
+        "book": 5,
+        "newspaper": 4
+      }
+    },
+    {
+      "ID": 6,
+      "Salary": 10,
+      "Components": {
+        "book": 16,
+        "newspaper": 20
+      }
+    },
+    {
+      "ID": 7,
+      "Salary": 10,
+      "Components": {
+        "book": 1,
+        "newspaper": 1
+      }
+    }
+  ],
+  "Synergy": [
+    [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [0.1, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [1.5, 1.2, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [1.0, 1.0, 1.7, 1.0, 0.0, 0.0, 0.0, 0.0],
+    [0.3, 2.0, 1.0, 1.1, 1.0, 0.0, 0.0, 0.0],
+    [0.9, 1.0, 1.0, 0.5, 0.6, 1.0, 0.0, 0.0],
+    [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0],
+    [0.9, 1.0, 0.2, 1.0, 1.0, 1.0, 0.8, 1.0]
+  ]
+}
