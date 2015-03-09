@@ -15,6 +15,7 @@ import (
 type SearchConfig struct {
 	SearchAlgorithm string
 	NeighborPicker  string
+	NumBeams        int
 }
 
 type LearningConfig struct {
@@ -69,6 +70,9 @@ func (config *Config) CreateSearchAlgorithm() search.SearchAlgorithm {
 	switch config.SearchConfig.SearchAlgorithm {
 	case "HillClimbing":
 		alg = search.CreateHillClimbingAlgorithm(neighborPicker)
+		break
+	case "BeamSearch":
+		alg = search.CreateLocalBeamAlgorithm(config.SearchConfig.NumBeams, neighborPicker)
 		break
 	}
 

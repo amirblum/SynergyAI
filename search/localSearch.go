@@ -4,32 +4,7 @@ import (
 	"github.com/amirblum/SynergyAI/model"
 )
 
-type HillClimbingAlgorithm struct {
-	neighborPicker NeighborPicker
-}
-
 type NeighborPicker func(*model.Team, *model.World, model.Task) *model.Team
-
-func CreateHillClimbingAlgorithm(neighborPicker NeighborPicker) *HillClimbingAlgorithm {
-	return &HillClimbingAlgorithm{neighborPicker}
-}
-
-func (alg HillClimbingAlgorithm) SearchTeam(world *model.World, task model.Task) *model.Team {
-
-	current := new(model.Team)
-
-	for {
-		nextNeighbor := alg.neighborPicker(current, world, task)
-
-		// Check break condition
-		if nextNeighbor != nil && world.CompareTeams(nextNeighbor, current, task) <= 0 {
-			return current
-		}
-
-		// Continue iteration
-		current = nextNeighbor
-	}
-}
 
 // Find highest neighbor
 func MaxNeighbor(current *model.Team, world *model.World, task model.Task) *model.Team {

@@ -6,7 +6,8 @@
   "RandomSeed": 6,
   "SearchConfig": {
     "SearchAlgorithm": "HillClimbing",
-    "NeighborPicker": "FirstChoice"
+    "NeighborPicker": "Max",
+    "NumBeams": 3
   },
   "LearningConfig": {
     "LearningAlgorithm": "TemporalDifference",
@@ -15,7 +16,7 @@
     "Frequency": 30
   },
   "AgentConfig": {
-    "SynergyAgent": "Powers",
+    "SynergyAgent": "Bond",
     "AgentChooser": "Augmented"
   }
 }
