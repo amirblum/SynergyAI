@@ -113,19 +113,19 @@ func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent 
 func (w *World) teamOutput(team *Team, task Task) map[Ability]float64 {
 	output := make(map[Ability]float64, len(task.Components))
 
-	// For each component
+	// For each component, take the workers ability in that component and multiply it
+	// with the dynamics between that worker and all other workers in the team
 	for ability, _ := range task.Components {
-		// For each worker
 		for _, worker := range team.Workers {
-			// Take the workers ability...
 			workerOutput := worker.Components[ability]
 			for _, otherWorker := range team.Workers {
 				x, y := worker.ID, otherWorker.ID
+				// Don't calculate for dynamic with itself...
 				if x != y {
+					// Our matrix is triangular (easier to config)
 					if x < y {
 						x, y = y, x
 					}
-					// ...and multiply it with his dynamic with other worker in team
 					workerOutput *= w.Synergy[x][y]
 				}
 			}

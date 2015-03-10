@@ -3,8 +3,6 @@ package search
 import (
 	"github.com/amirblum/SynergyAI/model"
 	"math/rand"
-	//    "fmt"
-	//    "os"
 )
 
 type SearchAlgorithm interface {
@@ -19,7 +17,7 @@ func IncrementalSuccessorIterator(team *model.Team, allWorkers []model.Worker) (
 func incrementalIterator(incrementRange int) func(int) (int, bool) {
 	return func(num int) (int, bool) {
 		num++
-		return num, num < incrementRange
+		return num, num < incrementRange-1
 	}
 }
 
@@ -42,11 +40,15 @@ func randomIterator(incrementRange int) func(int) (int, bool) {
 // Then remove the workers in the team on by one
 func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterator func(int) (int, bool)) (func() (*model.Team, bool), bool) {
 	// Init iterator
-	nextWorker, hasNext := findNextIndex(indexIterator, -1, allWorkers, node)
+	nextWorker, nextHasNext := findNextIndex(indexIterator, -1, allWorkers, node)
 
 	return func() (*model.Team, bool) {
 		currentWorker := nextWorker
-		nextWorker, hasNext = findNextIndex(indexIterator, nextWorker, allWorkers, node)
+		hasNext := nextHasNext
+
+		if nextHasNext {
+			nextWorker, nextHasNext = findNextIndex(indexIterator, nextWorker, allWorkers, node)
+		}
 
 		// Copy the team
 		newTeam := node.Copy()
@@ -68,7 +70,7 @@ func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterato
 
 		return newTeam, hasNext
 
-	}, hasNext
+	}, nextHasNext
 }
 
 func findNextIndex(indexIterator func(int) (int, bool), currentIndex int, allWorkers []model.Worker, node *model.Team) (int, bool) {
