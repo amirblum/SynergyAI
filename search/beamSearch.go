@@ -7,12 +7,11 @@ import (
 )
 
 type LocalBeamAlgorithm struct {
-	numBeams       int
-	neighborPicker NeighborPicker
+	numBeams int
 }
 
-func CreateLocalBeamAlgorithm(numBeams int, neighborPicker NeighborPicker) *LocalBeamAlgorithm {
-	return &LocalBeamAlgorithm{numBeams, neighborPicker}
+func CreateLocalBeamAlgorithm(numBeams int) *LocalBeamAlgorithm {
+	return &LocalBeamAlgorithm{numBeams}
 }
 
 func (alg LocalBeamAlgorithm) SearchTeam(world *model.World, task model.Task) *model.Team {

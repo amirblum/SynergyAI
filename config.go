@@ -72,7 +72,7 @@ func (config *Config) CreateSearchAlgorithm() search.SearchAlgorithm {
 		alg = search.CreateHillClimbingAlgorithm(neighborPicker)
 		break
 	case "BeamSearch":
-		alg = search.CreateLocalBeamAlgorithm(config.SearchConfig.NumBeams, neighborPicker)
+		alg = search.CreateLocalBeamAlgorithm(config.SearchConfig.NumBeams)
 		break
 	}
 
@@ -118,6 +118,8 @@ func (config *Config) CreateAgent(realWorld *model.World) agents.SynergyAgent {
 	case "Powers":
 		agent = agents.CreatePowers(config.CreateSearchAlgorithm(), config.CreateLearningAlgorithm(), realWorld, chooser)
 		break
+	case "English":
+		agent = agents.CreateEnglish(config.CreateSearchAlgorithm(), realWorld)
 	}
 
 	return agent
