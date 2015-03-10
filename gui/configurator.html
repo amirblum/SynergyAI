@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Basic JSON Editor Example</title>
+    <script src="jsoneditor.js"></script>
+    <script src="FileSaver.js"></script>
+  </head>
+  <body>
+    <h1>SynergyAI Config Generator</h1>
+    
+    <div id='editor_holder'></div>
+    <button id='submit'>Generate</button>
+    
+    <script>
+      // Initialize the editor with a JSON schema
+      var editor = new JSONEditor(document.getElementById('editor_holder'),{
+        schema: {
+          "title": "Config",
+          "type": "object",
+          "properties": {
+            "World": {
+              "type": "string",
+              "title": "World file"
+            },
+            "Budget": {
+              "type": "boolean",
+              "format": "checkbox",
+              "description": "Should the budget be considered?",
+              "default": true
+            },
+            "Tasks": {
+              "type": "string",
+              "title": "Tasks file"
+            },
+            "TasksAmount": {
+              "type": "integer",
+              "title": "Amount of tasks",
+              "default": 1000
+            },
+            "RandomSeed": {
+              "type": "integer",
+              "default": 6
+            },
+            "SearchConfig": {
+              "type": "object",
+              "title": "Search Algorithm",
+              "properties": {
+                "SearchAlgorithm": {
+                  "type": "string",
+                  "enum": [
+                    "HillClimbing",
+                    "BeamSearch"
+                  ]
+                },
+                "NeighborPicker": {
+                  "type": "string",
+                  "enum": [
+                    "Max",
+                    "FirstChoice"
+                  ]
+                },
+                "NumBeams": {
+                  "type": "integer",
+                  "title": "Number of beams",
+                  "default": 4
+                }
+              }
+            },
+            "LearningConfig": {
+              "type": "object",
+              "title": "Learning Algorithm",
+              "properties": {
+                "LearningAlgorithm": {
+                  "type": "string",
+                  "enum": [
+                    "TemporalDifference"
+                  ]
+                },
+                "DeltaCalcer": {
+                  "type": "string",
+                  "enum": [
+                    "Simple",
+                    "Average"
+                  ]
+                },
+                "Eta": {
+                  "type": "number",
+                  "description": "The eta to use when learning",
+                  "default": 0.1
+                },
+                "Frequency": {
+                  "type": "integer",
+                  "description": "Amount of tasks to sample before learning",
+                  "default": 30
+                }
+              }
+            },
+            "AgentConfig": {
+              "type": "object",
+              "properties": {
+                "SynergyAgent": {
+                  "type": "string",
+                  "title": "Agent",
+                  "enum": [
+                    "Bond",
+                    "Powers",
+                    "English"
+                  ]
+                },
+                "AgentChooser": {
+                  "type": "string",
+                  "description": "The way the agent chooses a different team sometimes",
+                  "enum": [
+                    "Augmented",
+                    "Random"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        disable_collapse: true,
+        disable_edit_json: true,
+        disable_properties: true
+      });
+      
+      // Hook up the submit button to log to the console
+      document.getElementById('submit').addEventListener('click',function() {
+        // Get the value from the editor
+        var blob = new Blob([JSON.stringify(editor.getValue())], {type: "text/json;charset=utf-8"});
+        saveAs(blob, "config.json");
+      });
+    </script>
+  </body>
+</html>
