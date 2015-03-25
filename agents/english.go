@@ -21,5 +21,7 @@ func (johnny *English) GetTeam(world *model.World, task model.Task) *model.Team 
 	// Find the optimal team using the real world. No learning for this agent
 	team := johnny.searchAlg.SearchTeam(johnny.realWorld, task)
 
+	fmt.Println("Found the team:\n", team)
+
 	return team
 }

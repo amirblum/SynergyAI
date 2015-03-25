@@ -6,6 +6,7 @@ import (
 	"flag"
 	"github.com/amirblum/SynergyAI/model"
 	"math/rand"
+	"time"
 )
 
 // Command line flags
@@ -33,7 +34,11 @@ func init() {
 func main() {
 	// Load config
 	config := LoadConfig(configFile)
-	rand.Seed(config.RandomSeed)
+	if config.RandomSeed < 0 {
+		rand.Seed(time.Now().Unix())
+	} else {
+		rand.Seed(config.RandomSeed)
+	}
 
 	// Load real world from file
 	realWorld = model.LoadWorld(config.World)
@@ -64,6 +69,6 @@ func main() {
 		//        fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
 	}
 
-	fmt.Printf("\nReal-World Synergy: \n%v\n", realWorld.Synergy)
-	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
+	//	fmt.Printf("\nReal-World Synergy: \n%v\n", realWorld.Synergy)
+	//	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
 }

@@ -1,0 +1,22 @@
+{
+  "World": "data/basicWorld5.json",
+  "Budget": false,
+  "Tasks": "data/basicTasks.json",
+  "TasksAmount": 1,
+  "RandomSeed": 6,
+  "SearchConfig": {
+    "SearchAlgorithm": "HillClimbing",
+    "NeighborPicker": "FirstChoice",
+    "NumBeams": 2
+  },
+  "LearningConfig": {
+    "LearningAlgorithm": "TemporalDifference",
+    "DeltaCalcer": "Simple",
+    "Eta": 0.1,
+    "Frequency": 30
+  },
+  "AgentConfig": {
+    "SynergyAgent": "English",
+    "AgentChooser": "Augmented"
+  }
+}

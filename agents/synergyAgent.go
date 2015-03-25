@@ -17,6 +17,7 @@ func RandomTeam(searchAlg search.SearchAlgorithm, world *model.World, task model
 
 func AugmentedOptimalTeam(searchAlg search.SearchAlgorithm, world *model.World, task model.Task) *model.Team {
 	optimalTeam := searchAlg.SearchTeam(world, task)
+	// Travel 30% of the size of the team
 	distance := (optimalTeam.Length()*3)/10 + 1
 
 	team := model.CreateTeamNode(optimalTeam.Workers, world.Workers)
