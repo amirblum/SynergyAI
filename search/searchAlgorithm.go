@@ -80,6 +80,17 @@ func findNextIndex(indexIterator func(int) (int, bool), currentIndex int, allWor
 	for nextIndex <= len(allWorkers) && node.WorkerMap[nextIndex] == true && hasNext {
 		nextIndex, hasNext = indexIterator(nextIndex)
 	}
+    //we are out of the loop,now checking has next
+    if hasNext{
+        //go the next step
+        nextNextIndex := indexIterator(nextIndex)
+        for nextNextIndex <= len(allWorkers) && node.WorkerMap[nextNextIndex] == true && hasNext {
+            nextNextIndex, hasNext = indexIterator(nextNextIndex)
+        }
+
+    }
+
+
 
 	return nextIndex, hasNext
 }
