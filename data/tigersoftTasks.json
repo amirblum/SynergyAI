@@ -1,0 +1,29 @@
+[
+  {
+    "Name": "Many servers",
+    "Weight": 1,
+    "Budget": {"Expect": 10.0, "Variance": 50.0},
+    "Components": {
+      "server": {"Expect": 25.0, "Variance": 5.0},
+      "client": {"Expect": 0.0, "Variance": 5.0}
+    }
+  },
+  {
+    "Name": "Many client",
+    "Weight": 1,
+    "Budget": {"Expect": 10.0, "Variance": 50.0},
+    "Components": {
+      "server": {"Expect": 0.0, "Variance": 5.0},
+      "client": {"Expect": 15.0, "Variance": 5.0}
+    }
+  },
+  {
+    "Name": "Balanced",
+    "Weight": 1,
+    "Budget": {"Expect": 10.0, "Variance": 50.0},
+    "Components": {
+      "server": {"Expect": 25.0, "Variance": 5.0},
+      "client": {"Expect": 15.0, "Variance": 5.0}
+    }
+  }
+]

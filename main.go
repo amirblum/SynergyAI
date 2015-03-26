@@ -5,6 +5,7 @@ import (
 
 	"flag"
 	"github.com/amirblum/SynergyAI/model"
+	"math"
 	"math/rand"
 	"time"
 )
@@ -69,6 +70,17 @@ func main() {
 		//        fmt.Printf("For task:\n%v\nThe team:\n%v\nAppraised the score: %v, fulfillPercent: %v\nAnd the Real score: %v, fullfillPercent: %v\n", task, team, score, fulfill, realScore, realFulfill)
 	}
 
-	//	fmt.Printf("\nReal-World Synergy: \n%v\n", realWorld.Synergy)
-	//	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
+	fmt.Printf("\nReal-World Synergy: \n%v\n", realWorld.Synergy)
+	fmt.Printf("\nFinal Synergy: \n%v\n", world.Synergy)
+
+	learnScore := 0.0
+	for _, worker := range world.Workers {
+		for _, otherWorker := range world.Workers {
+			if worker.ID > otherWorker.ID {
+				learnScore += math.Pow(realWorld.Synergy[worker.ID][otherWorker.ID]-world.Synergy[worker.ID][otherWorker.ID], 2)
+			}
+		}
+	}
+
+	fmt.Println("The learning receives a score of:", learnScore)
 }

@@ -3,6 +3,7 @@ package search
 import (
 	"github.com/amirblum/SynergyAI/model"
 	"math/rand"
+	//    "fmt"
 )
 
 type SearchAlgorithm interface {
@@ -28,6 +29,7 @@ func RandomSuccessorIterator(team *model.Team, allWorkers []model.Worker) (func(
 
 func randomIterator(incrementRange int) func(int) (int, bool) {
 	permutation := rand.Perm(incrementRange)
+	//    fmt.Println(permutation)
 	current := -1
 	return func(num int) (int, bool) {
 		current++
@@ -55,6 +57,11 @@ func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterato
 
 		// If there are more workers to add, add
 		if currentWorker < len(allWorkers) {
+			if node.WorkerMap[currentWorker] == true {
+				return newTeam, hasNext
+			}
+
+			//            fmt.Println("To team:\n", node, "\nAdding worker", currentWorker, "hasNext", hasNext, "nextHasNext:", nextHasNext)
 			newTeam.Workers = append(newTeam.Workers, allWorkers[currentWorker])
 			newTeam.WorkerMap[allWorkers[currentWorker].ID] = true
 
@@ -63,10 +70,11 @@ func successorIterator(node *model.Team, allWorkers []model.Worker, indexIterato
 
 		// Finished returning teams with added workers, start removing workers
 		idToRemove := currentWorker - len(allWorkers)
-
 		workerToRemove := newTeam.Workers[idToRemove]
 		newTeam.Workers = append(newTeam.Workers[:idToRemove], newTeam.Workers[idToRemove+1:]...)
 		newTeam.WorkerMap[workerToRemove.ID] = false
+
+		//        fmt.Println("To team:\n", node, "\nRemoving worker", workerToRemove, "hasNext", hasNext, "nextHasNext:", nextHasNext)
 
 		return newTeam, hasNext
 
@@ -80,17 +88,6 @@ func findNextIndex(indexIterator func(int) (int, bool), currentIndex int, allWor
 	for nextIndex <= len(allWorkers) && node.WorkerMap[nextIndex] == true && hasNext {
 		nextIndex, hasNext = indexIterator(nextIndex)
 	}
-    //we are out of the loop,now checking has next
-    if hasNext{
-        //go the next step
-        nextNextIndex := indexIterator(nextIndex)
-        for nextNextIndex <= len(allWorkers) && node.WorkerMap[nextNextIndex] == true && hasNext {
-            nextNextIndex, hasNext = indexIterator(nextNextIndex)
-        }
-
-    }
-
-
 
 	return nextIndex, hasNext
 }

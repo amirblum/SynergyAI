@@ -34,6 +34,9 @@ func CreateAverageDelta(eta float64, frequency int) *AverageDelta {
 }
 
 func (delta *AverageDelta) CalcDelta(diff float64) (float64, bool) {
+	delta.lastDifferences[delta.count] = diff
+	delta.count++
+
 	if delta.count == delta.frequency {
 		sum := 0.
 		for i := 0; i < delta.frequency; i++ {
@@ -44,8 +47,6 @@ func (delta *AverageDelta) CalcDelta(diff float64) (float64, bool) {
 		return delta.eta * (sum / float64(delta.frequency)), true
 	}
 
-	delta.lastDifferences[delta.count] = diff
-	delta.count++
 	return 0, false
 }
 
@@ -90,6 +91,9 @@ func (alg TemporalDifferenceAlgorithm) LearnSynergy(world, realWorld *model.Worl
 			for _, otherWorker := range team.Workers {
 				if worker.ID > otherWorker.ID {
 					world.Synergy[worker.ID][otherWorker.ID] += delta
+					if world.Synergy[worker.ID][otherWorker.ID] < 0 {
+						world.Synergy[worker.ID][otherWorker.ID] = 0
+					}
 				}
 			}
 		}

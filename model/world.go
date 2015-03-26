@@ -74,6 +74,8 @@ func (w *World) CompareTeams(team1, team2 *Team, task Task) int {
 	}
 }
 
+var LogScore bool = false
+
 func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent float64, inBudget bool) {
 	// Calculate budget
 	budgetSum := 0.
@@ -104,6 +106,10 @@ func (w *World) ScoreTeam(team *Team, task Task) (score float64, fulfillPercent 
 
 		score += outputRelation * componentPercent
 		fulfillPercent += math.Min(1., outputRelation) * componentPercent
+
+		if LogScore {
+			fmt.Println("output:", output, "demand:", demand, "componentPercent:", componentPercent, "score:", score)
+		}
 	}
 
 	return score, fulfillPercent, budgetSum <= task.Budget
@@ -127,6 +133,9 @@ func (w *World) teamOutput(team *Team, task Task) map[Ability]float64 {
 						x, y = y, x
 					}
 					workerOutput *= w.Synergy[x][y]
+					if LogScore {
+						fmt.Println("worker", worker.ID, "score:", workerOutput, "*", w.Synergy[x][y], "w.Synergy[x]:", w.Synergy[x])
+					}
 				}
 			}
 

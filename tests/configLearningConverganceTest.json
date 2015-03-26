@@ -1,22 +1,22 @@
 {
-  "World": "data/basicWorld5.json",
+  "World": "data/bookFactoryWorld8.json",
   "Budget": false,
-  "Tasks": "data/basicTasks.json",
-  "TasksAmount": 1,
-  "RandomSeed": 6,
+  "Tasks": "data/bookFactoryTasks.json",
+  "TasksAmount": 100000,
+  "RandomSeed": -1,
   "SearchConfig": {
     "SearchAlgorithm": "HillClimbing",
     "NeighborPicker": "FirstChoice",
-    "NumBeams": 2
+    "NumBeams": 4
   },
   "LearningConfig": {
     "LearningAlgorithm": "TemporalDifference",
-    "DeltaCalcer": "Simple",
+    "DeltaCalcer": "Average",
     "Eta": 0.1,
-    "Frequency": 30
+    "Frequency": 10
   },
   "AgentConfig": {
-    "SynergyAgent": "English",
+    "SynergyAgent": "Powers",
     "AgentChooser": "Augmented"
   }
 }
